@@ -22,5 +22,20 @@ describe( 'effecf', () => {
         user.age++
         expect(changeAge).toBe(12)
     })
+
+    it( 'should return render when call effect', () => {
+        //  effect(fn) -> function(render) -> fn -> return
+        // 调用effect返回一个fn，render' 调用render的时候会再次执行fn，当调用fn的时候 返回fn的一个返回值
+        let foo = 10
+        const runner:any = effect( () => {
+            foo++
+            return "foo"
+        })
+        expect(foo).toBe(11)
+
+        const r = runner()
+        expect(foo).toBe(12)
+        expect(r).toBe("foo")
+    })
 })
 
