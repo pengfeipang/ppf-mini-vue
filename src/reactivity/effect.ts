@@ -1,7 +1,7 @@
 // 面向对象
 class ReactiveEffect {
     private _fn: any
-    constructor(fn){
+    constructor(fn: any, public scheduler?: any){
         this._fn = fn
     }
     run(){
@@ -15,7 +15,7 @@ const targetMap = new Map()
 
 // 依赖收集方法 track
 export function track(target, key) {
-    // 收集的依赖不能重复，所以可以放到set map里
+    // 收集的依赖不能重复，所以可以放到set里
     // target --> key --> dep
     //depMap的盒子
     let depMap = targetMap.get(target)
@@ -37,20 +37,24 @@ export function track(target, key) {
 
 // 触发依赖trigger 方法
 // 先拿到dep的fn方法，然后遍历 执行
-export function trigger(target, key) {
+export function trigger(target: any, key: string | symbol) {
     let depsMap = targetMap.get(target)
     let dep = depsMap.get(key)
      for (const effect of dep) {
-         effect.run()
+         if( effect.scheduler ) {
+            effect.scheduler()
+         } else {
+            effect.run()
+         }
      }
 }
 
 // 创建全局对象，用来指向this
-let activeEffect
+let activeEffect: any
 
-export function effect(fn) {
+export function effect(fn, options: any = {}) {
     // fn
-    const _effect = new ReactiveEffect(fn)
+    const _effect = new ReactiveEffect(fn, options?.scheduler)
     _effect.run()
     return _effect.run.bind(_effect)
 }
