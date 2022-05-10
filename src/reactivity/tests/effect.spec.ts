@@ -1,7 +1,7 @@
 import { reactive } from '../reactive'
-import { effect } from '../effect'
+import { effect, stop } from '../effect'
 // 单元测试
-describe( 'effecf', () => {
+describe( 'effect', () => {
     it('happy path', () => {
         // 通过reactive创建一个响应式对象
         const user = reactive({
@@ -66,5 +66,37 @@ describe( 'effecf', () => {
         expect(dummy).toBe(2)
         
     })
+
+    it( 'stop', () => {
+        let dummy: unknown
+        const obj = reactive( { prop: 1 } )
+        const runner = effect( () => {
+            dummy = obj.prop
+        })
+        obj.prop = 2
+        expect(dummy).toBe(2)
+        stop(runner)
+        obj.prop = 3
+        expect(dummy).toBe(2)
+
+        // stoped effect should still be manually callable
+        runner()
+        expect(dummy).toBe(3)
+    })
+
+    // 调用stop后的回调函数，允许调用stop后可进行其它操作
+    it( 'onStop', () => {
+        const obj = reactive({
+            foo: 1
+        })
+        const onStop = jest.fn()
+        let dummy: number
+        const runner = effect( () => {
+            dummy = obj.foo
+        }, { onStop })
+        stop(runner)
+        expect(onStop).toBeCalledTimes(1)
+    })
+
 })
 

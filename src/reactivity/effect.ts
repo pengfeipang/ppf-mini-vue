@@ -1,6 +1,11 @@
+import { extend } from "../shared"
+
 // 面向对象
 class ReactiveEffect {
     private _fn: any
+    deps = []
+    active: boolean = true
+    onStop?: () => void
     constructor(fn: any, public scheduler?: any){
         this._fn = fn
     }
@@ -8,13 +13,28 @@ class ReactiveEffect {
         activeEffect = this
         return this._fn()
     }
+    stop(){
+        // 清空操作优化
+        if(this.active){
+            clearupEffect(this)
+            // onStop的回调 如果有onStop就调用一下
+            this.onStop ? this.onStop() : console.log('no onStop')
+            this.active = false
+        }
+    }
+}
+
+function clearupEffect(effect: any) {
+    effect.deps.forEach((dep: any) => {
+        dep.delete(effect)
+    });
 }
 
 //最外层 target 收集盒子
 const targetMap = new Map()
 
 // 依赖收集方法 track
-export function track(target, key) {
+export function track(target: any, key: any) {
     // 收集的依赖不能重复，所以可以放到set里
     // target --> key --> dep
     //depMap的盒子
@@ -30,7 +50,10 @@ export function track(target, key) {
         depMap.set(key, dep)
     }
 
+    if (!activeEffect) return
+    
     dep.add(activeEffect)
+    activeEffect.deps.push(dep)
     // const dep = new Set()
     
 }
@@ -41,6 +64,7 @@ export function trigger(target: any, key: string | symbol) {
     let depsMap = targetMap.get(target)
     let dep = depsMap.get(key)
      for (const effect of dep) {
+         // 判断effect是否哟scheduler方法
          if( effect.scheduler ) {
             effect.scheduler()
          } else {
@@ -52,9 +76,21 @@ export function trigger(target: any, key: string | symbol) {
 // 创建全局对象，用来指向this
 let activeEffect: any
 
-export function effect(fn, options: any = {}) {
+export function effect(fn: any, options: any = {}) {
     // fn
     const _effect = new ReactiveEffect(fn, options?.scheduler)
+    // 后续options里会有更多的方法，所以这块通过Object.assign 挂载上
+    // 为了更语义化，可以抽离Object.assign方法 导出 extend(a,b)
+    // _effect.onStop = options.onStop
+    // Object.assign(_effect, options)
+    extend(_effect, options)
+
     _effect.run()
-    return _effect.run.bind(_effect)
+    const runner: any = _effect.run.bind(_effect)
+    runner.effect = _effect
+    return runner
+}
+
+export function stop (runner: any) {
+    runner.effect.stop()
 }
