@@ -9,4 +9,12 @@ describe( 'readonly', () => {
         expect(wrapped).not.toBe(original)
         expect(wrapped.foo).toBe(1)
     })
+    it('warn when readonly call set', () => {
+        // 要用 mock  console.warn
+        console.warn = jest.fn()
+        const obj = { foo: 1}
+        const readonlyObj = readonly({ foo: 1})
+        readonlyObj.foo = 2
+        expect(console.warn).toBeCalled()
+    })
 })
