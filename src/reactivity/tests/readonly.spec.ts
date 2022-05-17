@@ -1,4 +1,4 @@
-import { readonly } from "../reactive"
+import { isReadonly, readonly } from "../reactive"
 
 // readonly 只读对象 属性
 describe( 'readonly', () => {
@@ -7,6 +7,8 @@ describe( 'readonly', () => {
         const original = { foo: 1, bar: { baz: 2 } }
         const wrapped = readonly(original)
         expect(wrapped).not.toBe(original)
+        expect(isReadonly(wrapped)).toBe(true)
+        expect(isReadonly(original)).toBe(false)
         expect(wrapped.foo).toBe(1)
     })
     it('warn when readonly call set', () => {

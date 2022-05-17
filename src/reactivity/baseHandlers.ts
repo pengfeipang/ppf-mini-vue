@@ -1,9 +1,16 @@
 import { track, trigger } from "./effect"
+import { reactiveFlags } from "./reactive"
 
 // 高阶函数 返回一个fun
 function createGetter(isReadonly:boolean = false) {
     // 优化get set
-    return function get(target, key) {
+    return function get(target, key) { 
+        if(key === reactiveFlags.IS_REACTIVE) {
+            return !isReadonly 
+        }
+        if(key === reactiveFlags.IS_READONLY){
+            return isReadonly
+        }
         // target 就是当前的对象； key是 用户访问的key
         // { foo: 1} === target
         // foo === key 
