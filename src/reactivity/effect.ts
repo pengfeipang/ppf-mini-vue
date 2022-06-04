@@ -1,4 +1,7 @@
 import { extend } from "../shared"
+// 创建全局对象，用来指向this
+let activeEffect: any
+let shouldTrack: boolean
 
 // 面向对象
 class ReactiveEffect {
@@ -10,8 +13,20 @@ class ReactiveEffect {
         this._fn = fn
     }
     run(){
+        // 会依赖收集 
+        // shouldTrack 来做区分
+        if(!this.active) {
+            return this._fn()
+        }
+
+        shouldTrack = true
         activeEffect = this
-        return this._fn()
+        const result = this._fn()
+
+        // reset
+        shouldTrack = false
+        
+        return result 
     }
     stop(){
         // 清空操作优化
@@ -28,6 +43,7 @@ function clearupEffect(effect: any) {
     effect.deps.forEach((dep: any) => {
         dep.delete(effect)
     });
+    effect.deps.length = 0
 }
 
 //最外层 target 收集盒子
@@ -35,6 +51,7 @@ const targetMap = new Map()
 
 // 依赖收集方法 track
 export function track(target: any, key: any) {
+    if(!isTracking()) return 
     // 收集的依赖不能重复，所以可以放到set里
     // target --> key --> dep
     //depMap的盒子
@@ -49,13 +66,16 @@ export function track(target: any, key: any) {
         dep = new Set()
         depMap.set(key, dep)
     }
-
-    if (!activeEffect) return
     
     dep.add(activeEffect)
     activeEffect.deps.push(dep)
     // const dep = new Set()
     
+}
+
+// 抽离出判断
+function isTracking() {
+    return activeEffect && shouldTrack
 }
 
 // 触发依赖trigger 方法
@@ -72,9 +92,6 @@ export function trigger(target: any, key: string | symbol) {
          }
      }
 }
-
-// 创建全局对象，用来指向this
-let activeEffect: any
 
 export function effect(fn: any, options: any = {}) {
     // fn
