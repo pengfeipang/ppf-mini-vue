@@ -1,4 +1,4 @@
-import { isReadonly, readonly } from "../reactive"
+import { isReadonly, readonly, isProxy } from "../reactive"
 
 // readonly 只读对象 属性
 describe( 'readonly', () => {
@@ -9,6 +9,7 @@ describe( 'readonly', () => {
         expect(wrapped).not.toBe(original)
         expect(isReadonly(wrapped)).toBe(true)
         expect(isReadonly(original)).toBe(false)
+        expect(isProxy(wrapped)).toBe(true)
         expect(wrapped.foo).toBe(1)
     })
     it('warn when readonly call set', () => {
@@ -19,7 +20,7 @@ describe( 'readonly', () => {
         readonlyObj.foo = 2
         expect(console.warn).toBeCalled()
     })
-    // 多层对象 进行reactive
+    // 多层对象 进行readonly
     test("nested reactive", () => {
         const original = {
             nested: { foo: 1},

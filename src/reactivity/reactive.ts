@@ -22,6 +22,10 @@ export function readonly(raw: any) {
     return proxyFun(raw, readonlyHandlers)
 }
 
+export function isProxy(raw: any) {
+    return isReactive(raw) || isReadonly(raw)
+}
+
 export function shallowReadonly(raw: any) {
     return proxyFun(raw, shallowHandlers)
 }
