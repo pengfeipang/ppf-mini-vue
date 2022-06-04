@@ -1,9 +1,9 @@
-import { isObject } from "../shared"
+import { extend, isObject } from "../shared"
 import { track, trigger } from "./effect"
 import { reactive, reactiveFlags, readonly } from "./reactive"
 
 // 高阶函数 返回一个fun
-function createGetter(isReadonly:boolean = false) {
+function createGetter(isReadonly:boolean = false, shallow: boolean = false) {
     // 优化get set
     return function get(target: any, key: any) { 
         if(key === reactiveFlags.IS_REACTIVE) {
@@ -16,6 +16,9 @@ function createGetter(isReadonly:boolean = false) {
         // { foo: 1} === target
         // foo === key 
         const res = Reflect.get(target, key)
+
+        // 判断是不是shallowreadonly类型
+        if(shallow) return res
 
         // 判断res是不是obj，如果是继续reactive
         if(isObject(res)) {
@@ -50,3 +53,8 @@ export const readonlyHandlers = {
         return true
     }
 }
+
+// 通过extend继承 readonlyHandlers set直接拿来用，只修改get
+export const shallowHandlers = extend({}, readonlyHandlers, {
+    get:createGetter(true, true),
+})
