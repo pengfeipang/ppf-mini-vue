@@ -1,6 +1,7 @@
 import { extend } from "../shared"
 // 创建全局对象，用来指向this
 let activeEffect: any
+// 创建是否stop判断参数
 let shouldTrack: boolean
 
 // 面向对象

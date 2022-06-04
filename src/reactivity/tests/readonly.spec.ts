@@ -19,4 +19,17 @@ describe( 'readonly', () => {
         readonlyObj.foo = 2
         expect(console.warn).toBeCalled()
     })
+    // 多层对象 进行reactive
+    test("nested reactive", () => {
+        const original = {
+            nested: { foo: 1},
+            foo: 3,
+            aray: [ { bar: 2 } ]
+        }
+        const wrapped = readonly(original) 
+        expect(wrapped).not.toBe(original)
+        expect(isReadonly(wrapped)).toBe(true)
+        expect(isReadonly(original)).toBe(false)
+        expect(wrapped.foo).toBe(3)
+    })
 })
