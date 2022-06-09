@@ -68,14 +68,21 @@ export function track(target: any, key: any) {
         depMap.set(key, dep)
     }
     
-    dep.add(activeEffect)
-    activeEffect.deps.push(dep)
-    // const dep = new Set()
+    trackEffects(dep)
     
 }
 
+// 抽离track 收集dep
+export function trackEffects(dep: any) {
+    // 看看 dep 之前有没有添加过，添加过的话 就不添加了
+    if(dep.has(activeEffect)) return
+    dep.add(activeEffect)
+    activeEffect.deps.push(dep)
+    // const dep = new Set()
+}
+
 // 抽离出判断
-function isTracking() {
+export function isTracking() {
     return activeEffect && shouldTrack
 }
 
@@ -84,14 +91,19 @@ function isTracking() {
 export function trigger(target: any, key: string | symbol) {
     let depsMap = targetMap.get(target)
     let dep = depsMap.get(key)
-     for (const effect of dep) {
-         // 判断effect是否哟scheduler方法
-         if( effect.scheduler ) {
+    triggerEffects(dep)
+}
+
+// 抽离trigger 触发依赖行为
+export function triggerEffects(dep: any) {
+    for (const effect of dep) {
+        // 判断effect是否哟scheduler方法
+        if( effect.scheduler ) {
             effect.scheduler()
-         } else {
+        } else {
             effect.run()
-         }
-     }
+        }
+    }
 }
 
 export function effect(fn: any, options: any = {}) {
