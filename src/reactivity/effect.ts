@@ -34,7 +34,9 @@ class ReactiveEffect {
         if(this.active){
             clearupEffect(this)
             // onStop的回调 如果有onStop就调用一下
-            this.onStop ? this.onStop() : console.log('no onStop')
+            if(this.onStop) {
+                this.onStop()
+            }
             this.active = false
         }
     }
@@ -88,7 +90,7 @@ export function isTracking() {
 
 // 触发依赖trigger 方法
 // 先拿到dep的fn方法，然后遍历 执行
-export function trigger(target: any, key: string | symbol) {
+export function trigger(target: any, key: any) {
     let depsMap = targetMap.get(target)
     let dep = depsMap.get(key)
     triggerEffects(dep)
