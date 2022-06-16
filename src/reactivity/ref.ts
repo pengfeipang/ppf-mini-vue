@@ -6,6 +6,7 @@ class refImpl {
     private _value: any
     public dep: any
     _rawValue: any
+    public __v_isRef: boolean = true
     constructor(value: any) {
         this._rawValue = value
         this._value = convert(value)
@@ -30,7 +31,7 @@ function convert(value: any) {
     return isObject(value) ? reactive(value) : value
 }
 
-function trackRefValue(red) {
+function trackRefValue(red: any) {
     if(isTracking()) {
         trackEffects(red.dep)
     }
@@ -38,4 +39,12 @@ function trackRefValue(red) {
 
 export function ref(value: any) {
     return new refImpl(value)
+}
+
+export function isRef(ref: any) {
+    return !!ref.__v_isRef
+}
+
+export function unRef(ref: any) {
+    return isRef(ref) ? ref.value : ref
 }
