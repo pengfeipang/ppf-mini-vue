@@ -58,13 +58,12 @@ export function proxyRefs(objectWithRefs: any) {
             return unRef( Reflect.get(target, key) )
         },
         set(target, key, value){
-            // 如果值是ref 且 新值value不是一个ref 
-            if( isRef(target[key]) && !isRef(value)) {
+            // 如果值是ref 且 新值value不是一个ref
+            if( isRef(target[key]) && !isRef(value) ) {
                 return target[key].value = value 
             } else {
                 return Reflect.get(target, key)
             }
-
         }
     })
 }
