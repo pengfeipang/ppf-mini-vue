@@ -5,7 +5,7 @@ let activeEffect: any
 let shouldTrack: boolean
 
 // 面向对象
-class ReactiveEffect {
+export class ReactiveEffect {
     private _fn: any
     deps = []
     active: boolean = true
