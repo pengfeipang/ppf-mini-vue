@@ -14,7 +14,7 @@ class computedRefImpl {
         })
     }
     get value() {
-        // get的时候启动一个锁 dirty
+        // get的时候启动一个锁  dirty 
         if(this._dirty) {
             this._dirty = false
             this._value = this._effect.run()
