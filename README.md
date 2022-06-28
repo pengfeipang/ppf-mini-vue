@@ -43,3 +43,6 @@ https://zhuanlan.zhihu.com/p/526711315
 
 ### 一步步解读VUE3源码系列12 - 工具函数 isRef & unRef
 https://zhuanlan.zhihu.com/p/529877756
+
+### 一步步解读VUE3源码系列13 - computed
+https://zhuanlan.zhihu.com/p/533113894
