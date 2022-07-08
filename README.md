@@ -9,7 +9,7 @@
 
 ## 文档链接
 ### 一步步解读VUE3源码系列01-安装TS & JEST（单元测试） 
-https://zhuanlan.zhihu.com/p/503668141
+https://zhuanlan.zhihu.com/p/503668141 
 
 ### 一步步解读VUE3源码系列02- effect & reactive 实现依赖收集和依赖触发
 https://zhuanlan.zhihu.com/p/504348847
