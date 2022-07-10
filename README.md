@@ -3,7 +3,7 @@
 
 # npm run test
 
-# npm run test --watch-all
+# npm run test --watch-all 
 
 # npm run effect
 
