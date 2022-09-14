@@ -7,6 +7,9 @@ export function render(vnode: { type: any; props: any; children: any; }, contain
 
 function patch(vnode, container) {
     // 去处理组件
+    // TODO 判断 vnode是不是element 如果是就处理
+    // 思考：怎么判断vnode类型
+    console.log(vnode,vnode.type)
     processComponent(vnode, container)
 }
 

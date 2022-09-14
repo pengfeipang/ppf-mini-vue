@@ -1,3 +1,5 @@
+import { h } from "../../lib/guide-mini-vue.esm"
+
 export const App = {
     // .vue 暂不实现template编译
     // 通过render去渲染

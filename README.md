@@ -46,3 +46,7 @@ https://zhuanlan.zhihu.com/p/529877756
 
 ### 一步步解读VUE3源码系列13 - computed
 https://zhuanlan.zhihu.com/p/533113894
+### 一步步解读VUE3源码系列14 - component 主流程初始化
+https://zhuanlan.zhihu.com/p/535302525
+
+
