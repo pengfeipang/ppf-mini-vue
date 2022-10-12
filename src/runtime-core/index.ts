@@ -1,3 +1,3 @@
 // todo rollup
-export { creatApp } from "./creatApp" 
+export { createApp } from "./creatApp" 
 export { h } from "./h"

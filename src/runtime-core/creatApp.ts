@@ -2,7 +2,7 @@ import { render } from "./renderer"
 import { createVNode } from "./vnode"
 
 // 接受根组件模板
-export function creatApp(rootComponent: any) {
+export function createApp(rootComponent: any) {
     return {
         mount(rootContainer: any) {
             console.log(rootContainer,'rootContainer')

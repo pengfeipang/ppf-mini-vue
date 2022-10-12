@@ -7,7 +7,7 @@ export default {
         // 1 cjs -> commonjs
         // 2 esm es6
         {
-            format: "cjs",
+            format: "cjs", // 描述
             file: config.main
         },
         {
@@ -16,6 +16,6 @@ export default {
         }
     ],
     plugins: [
-        typescript()
+        typescript() // 安装转译官方插件 ts-->js @rollup/plugin-typescript
     ]
 }

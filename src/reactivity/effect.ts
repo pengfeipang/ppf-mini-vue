@@ -1,4 +1,4 @@
-import { extend } from "../shared"
+import { extend } from "../shared/index"
 // 创建全局对象，用来指向this
 let activeEffect: any
 // 创建是否stop判断参数

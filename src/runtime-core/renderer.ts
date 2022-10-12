@@ -1,3 +1,5 @@
+import { doc } from "prettier";
+import { isObject } from "../shared/index";
 import { createComponentInstance, setupComponent } from "./component";
 
 export function render(vnode: { type: any; props: any; children: any; }, container: any) {
@@ -9,8 +11,24 @@ function patch(vnode, container) {
     // 去处理组件
     // TODO 判断 vnode是不是element 如果是就处理
     // 思考：怎么判断vnode类型
-    console.log(vnode,vnode.type)
-    processComponent(vnode, container)
+    console.log(vnode.type,'123')
+    if(typeof vnode.type === "string") {
+        processElement(vnode,container)
+    } else if(isObject(vnode.type)) {
+        processComponent(vnode, container)
+    }
+}
+
+function processElement(vnode: any, container: any) {
+    mountElement(vnode,container)
+}
+
+function mountElement(vnode: any, container: any) {
+    // string array
+    const el = document.createElement(vnode.type)
+    el.textContent = "hi"
+    el.setAttribute("id","root")
+    document.body.append(el)
 }
 
 function processComponent(vnode: any, container: any) {
