@@ -26,9 +26,21 @@ function processElement(vnode: any, container: any) {
 function mountElement(vnode: any, container: any) {
     // string array
     const el = document.createElement(vnode.type)
-    el.textContent = "hi"
-    el.setAttribute("id","root")
-    document.body.append(el)
+    const { children, props } = vnode
+    console.log(children, props, 'asdasd')
+    // children is array
+    if(Array.isArray(children)) {
+        children.forEach( item => {
+            patch(item,el)
+        })
+    } else if(typeof children === 'string') {
+        el.textContent = children
+        // props
+        for (const key in props) {
+            el.setAttribute(key, props[key])
+        }
+    }
+    container.append(el)
 }
 
 function processComponent(vnode: any, container: any) {

@@ -12,7 +12,8 @@ export const App = {
                 id: "root",
                 class: ["red", "hard"]
             },
-            [h("p",{ class: "red"}, "hi"), h("p", {class: "blue"}, "mi")]
+            [h("p",{ class: "red"}, "hi"), h("p", {class: "blue"}, "mini-vue")]
+            // "hi,mini-vue" //string    
         )
     },
     setup() {
