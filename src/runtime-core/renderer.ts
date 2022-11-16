@@ -8,10 +8,10 @@ export function render(vnode: { type: any; props: any; children: any; }, contain
 }
 
 function patch(vnode, container) {
+    // debugger
     // 去处理组件
     // TODO 判断 vnode是不是element 如果是就处理
     // 思考：怎么判断vnode类型
-    console.log(vnode.type,'123')
     if(typeof vnode.type === "string") {
         processElement(vnode,container)
     } else if(isObject(vnode.type)) {
@@ -20,12 +20,12 @@ function patch(vnode, container) {
 }
 
 function processElement(vnode: any, container: any) {
-    mountElement(vnode,container)
+    mountElement(vnode, container)
 }
 
 function mountElement(vnode: any, container: any) {
     // string array
-    const el = document.createElement(vnode.type)
+    const el = (vnode.el = document.createElement(vnode.type))
     const { children, props } = vnode
     console.log(children, props, 'asdasd')
     // children is array
@@ -34,11 +34,12 @@ function mountElement(vnode: any, container: any) {
             patch(item,el)
         })
     } else if(typeof children === 'string') {
+        console.log(children,'1231231231')
         el.textContent = children
-        // props
-        for (const key in props) {
-            el.setAttribute(key, props[key])
-        }
+    }
+    // props 处理el props
+    for (const key in props) {
+        el.setAttribute(key, props[key])
     }
     container.append(el)
 }
@@ -50,15 +51,20 @@ function processComponent(vnode: any, container: any) {
 function mountComponent(vnode: any, container: any) {
     // 创建组件实例
     const instance = createComponentInstance(vnode)
+
     setupComponent(instance)
-    setupRenderEffect(instance, container)
+    
+    setupRenderEffect(vnode, instance, container)
 }
 
-function setupRenderEffect(instance, container) {
+function setupRenderEffect(vnode, instance, container) {
+    const { proxy } = instance
     // 虚拟节点树 vnode
-    const subTree = instance.render()
+    const subTree = instance.render.call(proxy)
 
     // vnode -> element -> mountEffect
     patch(subTree, container)
+    // 所有的elment类型都 初始化后
+    vnode.el = subTree.el
 }
 
