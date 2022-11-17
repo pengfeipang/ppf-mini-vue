@@ -52,5 +52,8 @@ https://zhuanlan.zhihu.com/p/535302525
 ### 一步步解读VUE3源码系列15 - 使用rollup打包库
 https://zhuanlan.zhihu.com/p/572866479
 
+### 一步步解读VUE3源码系列16 - 实现组件代理对象
+https://zhuanlan.zhihu.com/p/584190482
+
 
 
